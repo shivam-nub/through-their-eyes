@@ -32,10 +32,14 @@ export function MultiCompareView() {
       canvas ? new VisionRenderer(canvas) : null
     );
 
+    if (loadedImageRef.current) {
+      renderAll();
+    }
+
     return () => {
       renderersRef.current.forEach((r) => r?.dispose());
     };
-  }, [selectedSpeciesIds.length, compareMode]);
+  }, [selectedSpeciesIds, compareMode]);
 
   // Render on image load or species changes
   useEffect(() => {

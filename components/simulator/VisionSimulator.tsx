@@ -21,7 +21,6 @@ import {
   RefreshCw,
   ExternalLink,
   BookOpen,
-  Volume2,
 } from "lucide-react";
 import { SpeciesProfile } from "@/types/species";
 import { SPECIES_CATALOGUE } from "@/data/species";
@@ -29,7 +28,7 @@ import { SAMPLE_SCENES, SampleScene } from "@/data/sample-scenes";
 import { VisionRenderer } from "@/engine/renderer/VisionRenderer";
 import { EvidenceBadge } from "@/components/shared/EvidenceBadge";
 
-type ViewMode = "slider" | "split" | "overlay" | "single_animal" | "single_human";
+type ViewMode = "slider" | "split" | "overlay";
 type InputType = "sample" | "upload" | "camera";
 
 interface VisionSimulatorProps {
@@ -61,6 +60,10 @@ export function VisionSimulator({
   const [isDraggingSlider, setIsDraggingSlider] = useState<boolean>(false);
   const [isPanning, setIsPanning] = useState<boolean>(false);
   const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [stageDimensions, setStageDimensions] = useState<{ width: number; height: number }>({
+    width: 800,
+    height: 500,
+  });
 
   // Camera state
   const [cameraActive, setCameraActive] = useState<boolean>(false);
@@ -74,34 +77,77 @@ export function VisionSimulator({
   // DOM Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const animalCanvasRef = useRef<HTMLCanvasElement>(null);
-  const humanCanvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
-  const animalRendererRef = useRef<VisionRenderer | null>(null);
-  const humanRendererRef = useRef<VisionRenderer | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const loadedImageRef = useRef<HTMLImageElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize Renderers
+  // Persistent Canvas Refs for each mode
+  const sliderAnimalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const sliderHumanCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  const splitHumanCanvasRef = useRef<HTMLCanvasElement>(null);
+  const splitAnimalCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  const overlayHumanCanvasRef = useRef<HTMLCanvasElement>(null);
+  const overlayAnimalCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Dedicated Persistent VisionRenderers
+  const sliderAnimalRenderer = useRef<VisionRenderer | null>(null);
+  const sliderHumanRenderer = useRef<VisionRenderer | null>(null);
+
+  const splitHumanRenderer = useRef<VisionRenderer | null>(null);
+  const splitAnimalRenderer = useRef<VisionRenderer | null>(null);
+
+  const overlayHumanRenderer = useRef<VisionRenderer | null>(null);
+  const overlayAnimalRenderer = useRef<VisionRenderer | null>(null);
+
+  // Track stage dimensions for exact pixel-perfect slider alignment
   useEffect(() => {
-    if (animalCanvasRef.current && !animalRendererRef.current) {
-      animalRendererRef.current = new VisionRenderer(animalCanvasRef.current);
+    if (!stageRef.current) return;
+    const updateDims = () => {
+      if (stageRef.current) {
+        setStageDimensions({
+          width: stageRef.current.clientWidth,
+          height: stageRef.current.clientHeight,
+        });
+      }
+    };
+    updateDims();
+    const ro = new ResizeObserver(updateDims);
+    ro.observe(stageRef.current);
+    return () => ro.disconnect();
+  }, []);
+
+  // Initialize Renderers on Mount
+  useEffect(() => {
+    if (sliderAnimalCanvasRef.current && !sliderAnimalRenderer.current) {
+      sliderAnimalRenderer.current = new VisionRenderer(sliderAnimalCanvasRef.current);
     }
-    if (humanCanvasRef.current && !humanRendererRef.current) {
-      humanRendererRef.current = new VisionRenderer(humanCanvasRef.current);
+    if (sliderHumanCanvasRef.current && !sliderHumanRenderer.current) {
+      sliderHumanRenderer.current = new VisionRenderer(sliderHumanCanvasRef.current);
+    }
+    if (splitHumanCanvasRef.current && !splitHumanRenderer.current) {
+      splitHumanRenderer.current = new VisionRenderer(splitHumanCanvasRef.current);
+    }
+    if (splitAnimalCanvasRef.current && !splitAnimalRenderer.current) {
+      splitAnimalRenderer.current = new VisionRenderer(splitAnimalCanvasRef.current);
+    }
+    if (overlayHumanCanvasRef.current && !overlayHumanRenderer.current) {
+      overlayHumanRenderer.current = new VisionRenderer(overlayHumanCanvasRef.current);
+    }
+    if (overlayAnimalCanvasRef.current && !overlayAnimalRenderer.current) {
+      overlayAnimalRenderer.current = new VisionRenderer(overlayAnimalCanvasRef.current);
     }
 
     return () => {
-      if (animalRendererRef.current) {
-        animalRendererRef.current.dispose();
-        animalRendererRef.current = null;
-      }
-      if (humanRendererRef.current) {
-        humanRendererRef.current.dispose();
-        humanRendererRef.current = null;
-      }
+      sliderAnimalRenderer.current?.dispose();
+      sliderHumanRenderer.current?.dispose();
+      splitHumanRenderer.current?.dispose();
+      splitAnimalRenderer.current?.dispose();
+      overlayHumanRenderer.current?.dispose();
+      overlayAnimalRenderer.current?.dispose();
     };
   }, []);
 
@@ -126,21 +172,32 @@ export function VisionSimulator({
     };
   }, [stopCamera]);
 
-  // Load and render active image
+  // Load and render static image to all active viewports
   const renderStaticSource = useCallback(() => {
     if (!loadedImageRef.current || !loadedImageRef.current.complete) return;
     const img = loadedImageRef.current;
 
-    // Render Animal Vision
-    if (animalRendererRef.current && animalCanvasRef.current) {
-      animalRendererRef.current.render(img, currentSpecies.shaderParams);
-    }
+    // Render for Slider mode
+    sliderAnimalRenderer.current?.render(img, currentSpecies.shaderParams);
+    sliderHumanRenderer.current?.render(img, null);
 
-    // Render Human Reference Vision
-    if (humanRendererRef.current && humanCanvasRef.current) {
-      humanRendererRef.current.render(img, null);
-    }
+    // Render for Split mode
+    splitHumanRenderer.current?.render(img, null);
+    splitAnimalRenderer.current?.render(img, currentSpecies.shaderParams);
+
+    // Render for Overlay mode
+    overlayHumanRenderer.current?.render(img, null);
+    overlayAnimalRenderer.current?.render(img, currentSpecies.shaderParams);
   }, [currentSpecies]);
+
+  // Re-render when viewMode changes
+  useEffect(() => {
+    if (inputType !== "camera") {
+      requestAnimationFrame(() => {
+        renderStaticSource();
+      });
+    }
+  }, [viewMode, renderStaticSource, inputType]);
 
   // Handle image loading for samples & uploads
   useEffect(() => {
@@ -190,11 +247,15 @@ export function VisionSimulator({
       if (!isRunning) return;
       const video = videoRef.current;
       if (video && video.readyState >= 2) {
-        if (animalRendererRef.current && animalCanvasRef.current) {
-          animalRendererRef.current.render(video, currentSpecies.shaderParams);
-        }
-        if (humanRendererRef.current && humanCanvasRef.current) {
-          humanRendererRef.current.render(video, null);
+        if (viewMode === "slider") {
+          sliderAnimalRenderer.current?.render(video, currentSpecies.shaderParams);
+          sliderHumanRenderer.current?.render(video, null);
+        } else if (viewMode === "split") {
+          splitHumanRenderer.current?.render(video, null);
+          splitAnimalRenderer.current?.render(video, currentSpecies.shaderParams);
+        } else if (viewMode === "overlay") {
+          overlayHumanRenderer.current?.render(video, null);
+          overlayAnimalRenderer.current?.render(video, currentSpecies.shaderParams);
         }
       }
       animationFrameRef.current = requestAnimationFrame(renderLoop);
@@ -208,7 +269,7 @@ export function VisionSimulator({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [inputType, cameraActive, currentSpecies]);
+  }, [inputType, cameraActive, currentSpecies, viewMode]);
 
   // Start Camera Stream
   const startCamera = async () => {
@@ -293,16 +354,13 @@ export function VisionSimulator({
   };
 
   // Slider Mouse/Touch drag
-  const handleSliderMove = useCallback(
-    (clientX: number) => {
-      if (!stageRef.current) return;
-      const rect = stageRef.current.getBoundingClientRect();
-      const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-      const pct = (x / rect.width) * 100;
-      setSliderPosition(pct);
-    },
-    []
-  );
+  const handleSliderMove = useCallback((clientX: number) => {
+    if (!stageRef.current) return;
+    const rect = stageRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const pct = (x / rect.width) * 100;
+    setSliderPosition(pct);
+  }, []);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
@@ -578,90 +636,89 @@ export function VisionSimulator({
                 }
               }}
             >
-              {/* Mode A: Comparison Slider */}
-              {viewMode === "slider" && (
-                <div className="relative w-full h-full">
-                  {/* Base Layer: Animal Vision (full canvas) */}
+              {/* Mode A: Comparison Slider Container */}
+              <div className={`relative w-full h-full ${viewMode === "slider" ? "block" : "hidden"}`}>
+                {/* Base Layer: Animal Vision (full canvas) */}
+                <canvas
+                  ref={sliderAnimalCanvasRef}
+                  className="absolute inset-0 w-full h-full object-contain"
+                />
+
+                {/* Top Layer: Human Reference Vision (clipped by slider position) */}
+                <div
+                  className="absolute inset-0 overflow-hidden"
+                  style={{ width: `${sliderPosition}%` }}
+                >
                   <canvas
-                    ref={animalCanvasRef}
+                    ref={sliderHumanCanvasRef}
                     className="absolute inset-0 w-full h-full object-contain"
-                  />
-
-                  {/* Top Layer: Human Reference Vision (clipped by slider position) */}
-                  <div
-                    className="absolute inset-0 overflow-hidden"
-                    style={{ width: `${sliderPosition}%` }}
-                  >
-                    <canvas
-                      ref={humanCanvasRef}
-                      className="absolute inset-0 w-full h-full object-contain"
-                      style={{
-                        width: stageRef.current ? `${stageRef.current.clientWidth}px` : "100%",
-                        maxWidth: "none",
-                      }}
-                    />
-                  </div>
-
-                  {/* Draggable Divider Bar */}
-                  <div
-                    role="separator"
-                    aria-label="Comparison divider"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "ArrowLeft") setSliderPosition((p) => Math.max(0, p - 5));
-                      if (e.key === "ArrowRight") setSliderPosition((p) => Math.min(100, p + 5));
+                    style={{
+                      width: stageDimensions.width ? `${stageDimensions.width}px` : "100%",
+                      height: "100%",
+                      maxWidth: "none",
                     }}
-                    onMouseDown={() => setIsDraggingSlider(true)}
-                    onTouchStart={() => setIsDraggingSlider(true)}
-                    className="absolute top-0 bottom-0 z-20 flex items-center justify-center cursor-ew-resize group/slider focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                    style={{ left: `calc(${sliderPosition}% - 16px)`, width: "32px" }}
-                  >
-                    <div className="w-[2px] h-full bg-cyan-400 shadow-[0_0_12px_rgba(0,245,255,0.8)]" />
-                    <div className="absolute w-8 h-8 rounded-full bg-surface-100 border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,245,255,0.6)] flex items-center justify-center group-hover/slider:scale-110 transition-transform">
-                      <Sliders className="w-4 h-4 text-cyan-300 rotate-90" />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Mode B: Side-by-Side Split View */}
-              {viewMode === "split" && (
-                <div className="grid grid-cols-2 w-full h-full divide-x divide-white/20">
-                  <div className="relative w-full h-full">
-                    <canvas
-                      ref={humanCanvasRef}
-                      className="w-full h-full object-contain"
-                    />
-                    <div className="absolute top-3 left-3 px-2 py-1 rounded bg-black/70 backdrop-blur text-[11px] font-mono text-cyan-300 border border-cyan-500/30">
-                      Standard Human Reference
-                    </div>
-                  </div>
-                  <div className="relative w-full h-full">
-                    <canvas
-                      ref={animalCanvasRef}
-                      className="w-full h-full object-contain"
-                    />
-                    <div className="absolute top-3 right-3 px-2 py-1 rounded bg-black/70 backdrop-blur text-[11px] font-mono text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5">
-                      <span>{currentSpecies.commonName}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Mode C: Overlay / Fade */}
-              {viewMode === "overlay" && (
-                <div className="relative w-full h-full">
-                  <canvas
-                    ref={humanCanvasRef}
-                    className="absolute inset-0 w-full h-full object-contain"
-                  />
-                  <canvas
-                    ref={animalCanvasRef}
-                    className="absolute inset-0 w-full h-full object-contain transition-opacity duration-75"
-                    style={{ opacity: overlayOpacity / 100 }}
                   />
                 </div>
-              )}
+
+                {/* Draggable Divider Bar */}
+                <div
+                  role="separator"
+                  aria-label="Comparison divider"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "ArrowLeft") setSliderPosition((p) => Math.max(0, p - 5));
+                    if (e.key === "ArrowRight") setSliderPosition((p) => Math.min(100, p + 5));
+                  }}
+                  onMouseDown={() => setIsDraggingSlider(true)}
+                  onTouchStart={() => setIsDraggingSlider(true)}
+                  className="absolute top-0 bottom-0 z-20 flex items-center justify-center cursor-ew-resize group/slider focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                  style={{ left: `calc(${sliderPosition}% - 16px)`, width: "32px" }}
+                >
+                  <div className="w-[2px] h-full bg-cyan-400 shadow-[0_0_12px_rgba(0,245,255,0.8)]" />
+                  <div className="absolute w-8 h-8 rounded-full bg-surface-100 border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,245,255,0.6)] flex items-center justify-center group-hover/slider:scale-110 transition-transform">
+                    <Sliders className="w-4 h-4 text-cyan-300 rotate-90" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Mode B: Side-by-Side Split View Container */}
+              <div
+                className={`w-full h-full divide-x divide-white/20 ${
+                  viewMode === "split" ? "grid grid-cols-2" : "hidden"
+                }`}
+              >
+                <div className="relative w-full h-full flex items-center justify-center bg-black/40">
+                  <canvas
+                    ref={splitHumanCanvasRef}
+                    className="w-full h-full object-contain"
+                  />
+                  <div className="absolute top-3 left-3 px-2 py-1 rounded bg-black/70 backdrop-blur text-[11px] font-mono text-cyan-300 border border-cyan-500/30">
+                    Standard Human Reference
+                  </div>
+                </div>
+                <div className="relative w-full h-full flex items-center justify-center bg-black/40">
+                  <canvas
+                    ref={splitAnimalCanvasRef}
+                    className="w-full h-full object-contain"
+                  />
+                  <div className="absolute top-3 right-3 px-2 py-1 rounded bg-black/70 backdrop-blur text-[11px] font-mono text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5">
+                    <span>{currentSpecies.commonName}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mode C: Overlay / Fade Container */}
+              <div className={`relative w-full h-full ${viewMode === "overlay" ? "block" : "hidden"}`}>
+                <canvas
+                  ref={overlayHumanCanvasRef}
+                  className="absolute inset-0 w-full h-full object-contain"
+                />
+                <canvas
+                  ref={overlayAnimalCanvasRef}
+                  className="absolute inset-0 w-full h-full object-contain transition-opacity duration-75"
+                  style={{ opacity: overlayOpacity / 100 }}
+                />
+              </div>
             </div>
 
             {/* In-viewport View Badges */}
@@ -672,8 +729,10 @@ export function VisionSimulator({
                     <span className="text-cyan-300">Human</span> ⟷{" "}
                     <span className="text-cyan-400 font-semibold">{currentSpecies.commonName}</span>
                   </span>
+                ) : viewMode === "split" ? (
+                  <span>Side-by-Side Comparison</span>
                 ) : (
-                  <span>{currentSpecies.commonName} Simulation</span>
+                  <span>Overlay Fade Mode</span>
                 )}
               </span>
               <EvidenceBadge level={currentSpecies.evidenceLevel} />
