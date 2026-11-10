@@ -216,18 +216,24 @@ export function MultiCompareView() {
                 </div>
 
                 {/* Biological Traits Comparison Bar */}
-                <div className="grid grid-cols-3 gap-2 text-[11px] pt-1">
-                  <div className="p-2 rounded bg-surface-300 border border-white/5">
-                    <span className="text-[9px] uppercase font-mono text-slate-400 block">Acuity</span>
-                    <span className="font-semibold text-cyan-300">{species.acuity.snellenEquivalent}</span>
+                <div className="space-y-1.5 pt-1 text-xs">
+                  <div className="p-2 rounded bg-surface-300 border border-white/5 flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-cyan-400 font-semibold">🎨 Colors</span>
+                    <span className="text-slate-300 font-medium truncate max-w-[180px] text-right">{species.friendlyColorSummary || `${species.photoreceptors.count} opsins`}</span>
                   </div>
-                  <div className="p-2 rounded bg-surface-300 border border-white/5">
-                    <span className="text-[9px] uppercase font-mono text-slate-400 block">Night Vision</span>
-                    <span className="font-semibold text-cyan-300">{species.lowLight.sensitivityMultiplier}x</span>
+                  <div className="p-2 rounded bg-surface-300 border border-white/5 flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-cyan-400 font-semibold">👁️ Clarity</span>
+                    <span className="text-slate-300 font-medium truncate max-w-[180px] text-right">{species.friendlySharpness || species.acuity.snellenEquivalent}</span>
                   </div>
-                  <div className="p-2 rounded bg-surface-300 border border-white/5">
-                    <span className="text-[9px] uppercase font-mono text-slate-400 block">FOV</span>
-                    <span className="font-semibold text-cyan-300">{species.fieldOfView.totalHorizontalDegrees}°</span>
+                  <div className="grid grid-cols-2 gap-1.5 text-[10px] font-mono text-slate-400">
+                    <div className="p-1.5 rounded bg-surface-300/60 border border-white/5">
+                      <span>Night: </span>
+                      <span className="text-cyan-300 font-semibold">{species.lowLight.sensitivityMultiplier}x</span>
+                    </div>
+                    <div className="p-1.5 rounded bg-surface-300/60 border border-white/5">
+                      <span>FOV: </span>
+                      <span className="text-cyan-300 font-semibold">{species.fieldOfView.totalHorizontalDegrees}°</span>
+                    </div>
                   </div>
                 </div>
               </div>

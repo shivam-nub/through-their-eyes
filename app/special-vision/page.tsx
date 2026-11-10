@@ -8,10 +8,10 @@ import {
   Eye,
   ShieldAlert,
   Sparkles,
-  Info,
   Waves,
-  Zap,
-  Activity,
+  Lightbulb,
+  Compass,
+  ArrowRight,
 } from "lucide-react";
 
 export default function SpecialVisionPage() {
@@ -21,13 +21,13 @@ export default function SpecialVisionPage() {
       <div className="text-center max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-xs font-mono text-violet-300 mb-3">
           <Sparkles className="w-3.5 h-3.5 text-violet-400" />
-          <span>Extraordinary Sensory Frontiers</span>
+          <span>Extraordinary Animal Senses</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
-          Special Vision & Alternate Senses
+          Special Vision & Secret Senses
         </h1>
         <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-          Nature has invented sensory mechanisms radically unfamiliar to human experience. Here we explore ultraviolet sensitivity, retroreflective night optics, polarized navigation, and draw a strict scientific boundary between ocular vision and non-visual senses like thermal pit organs and echolocation.
+          Nature has invented perception superpowers far beyond human experience. Discover ultraviolet flower runways, glowing night-vision mirrors, and heat-sensing facial pits — broken down into simple, fun analogies alongside real biology.
         </p>
       </div>
 
@@ -40,9 +40,9 @@ export default function SpecialVisionPage() {
             </div>
             <div>
               <span className="text-xs uppercase font-mono tracking-widest text-violet-400 font-semibold">
-                Short-Wave Spectrum (300 - 400 nm)
+                Secret UV Color (300 - 400 nm)
               </span>
-              <h2 className="text-2xl font-bold text-white">Ultraviolet Sensitivity & Floral Guides</h2>
+              <h2 className="text-2xl font-bold text-white">Ultraviolet Vision & Nature&apos;s Airport Runways</h2>
             </div>
           </div>
           <Link
@@ -50,30 +50,36 @@ export default function SpecialVisionPage() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider font-semibold text-black bg-violet-400 hover:bg-violet-300 transition-colors"
           >
             Simulate Honeybee UV
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
+        </div>
+
+        {/* Everyday Analogy Callout */}
+        <div className="p-4 rounded-2xl bg-violet-950/40 border border-violet-500/30 flex items-start gap-3 text-xs text-violet-200">
+          <Lightbulb className="w-5 h-5 text-yellow-300 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-white block text-sm mb-1">Everyday Analogy: Airport Landing Lights for Bees</strong>
+            <p>
+              To your human eyes, a dandelion or sunflower looks like a plain yellow circle. But to a bee, the flower has a glowing ultraviolet bullseye pointing directly into the nectar bowl! Plants evolved this secret visual code so bees land right on the pollen without wasting a single second.
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300 leading-relaxed">
           <div className="space-y-3">
-            <h3 className="font-semibold text-white">The Biological Mechanism</h3>
-            <p>
-              Human corneas and crystalline lenses contain yellow pigment filters that absorb ultraviolet wavelengths below ~390 nm to protect our retinas from photochemical damage. Honeybees, butterflies, and many birds possess UV-transparent ocular media and dedicated UV-opsin cones (peaking between 340 nm and 370 nm).
-            </p>
-            <p>
-              To a bee, a plain yellow evening primrose or buttercup is marked with a vivid ultraviolet bullseye pointing toward the nectar gland. This symbiotic visual signal directs pollinators straight to reproductive organs with zero wasted flight time.
+            <h3 className="font-semibold text-white">Why Can&apos;t Humans See It?</h3>
+            <p className="text-xs sm:text-sm">
+              The human eye has natural yellow-tinted lenses that block UV light to protect our delicate retinas from sun damage. Honeybees, butterflies, and many birds have crystal-clear eye lenses plus a special fourth color sensor tuned specifically to UV light waves.
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2 text-xs text-amber-200">
             <div className="flex items-center gap-2 font-bold text-amber-300">
               <ShieldAlert className="w-4 h-4" />
-              <span>Scientific Limitation & Data Boundary</span>
+              <span>How We Simulate This Honestly</span>
             </div>
             <p>
-              Standard digital cameras use silicon CMOS sensors fitted with an infrared/ultraviolet cut filter (hot mirror) that deliberately discards wavelengths below ~390 nm. An ordinary RGB JPEG therefore contains <strong>zero actual ultraviolet reflectance data</strong>.
-            </p>
-            <p>
-              In our simulator, UV effects are marked as <strong>MODELED</strong>. We employ a bio-optical heuristic that estimates typical angiosperm UV reflectance from the ratio of blue-green emission to red absorption, displaying reconstructed patterns in a visible false-color violet-cyan spectrum.
+              Normal phone and camera lenses filter out UV light, so photos don&apos;t actually contain raw UV data. In our simulator, we use a biological formula that estimates where flowers reflect UV and renders it in visible false-color neon violet so human screens can display it.
             </p>
           </div>
         </div>
@@ -88,34 +94,43 @@ export default function SpecialVisionPage() {
             </div>
             <div>
               <span className="text-xs uppercase font-mono tracking-widest text-cyan-400 font-semibold">
-                Scotopic Adaptation
+                Night Vision Optics
               </span>
-              <h2 className="text-2xl font-bold text-white">Tapetum Lucidum & Night Optics</h2>
+              <h2 className="text-2xl font-bold text-white">The Built-In Eye Mirror (Tapetum Lucidum)</h2>
             </div>
           </div>
           <Link
             href="/simulator?species=cat"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider font-semibold text-black bg-cyan-400 hover:bg-cyan-300 transition-colors"
           >
-            Simulate Feline Night
+            Simulate Cat Night Sight
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
+        </div>
+
+        {/* Everyday Analogy Callout */}
+        <div className="p-4 rounded-2xl bg-cyan-950/40 border border-cyan-500/30 flex items-start gap-3 text-xs text-cyan-200">
+          <Lightbulb className="w-5 h-5 text-yellow-300 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-white block text-sm mb-1">Everyday Analogy: Why Animal Eyes Glow Like Headlights</strong>
+            <p>
+              Ever shine a flashlight at your dog or cat at night and see their eyes glow green or gold? That is the <em>Tapetum Lucidum</em> — Latin for &ldquo;tapestry of light&rdquo;. It is a biological mirror located right behind the retina. When light enters, whatever isn&apos;t caught the first time bounces right back through for a second chance!
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300 leading-relaxed">
           <div className="space-y-3">
-            <h3 className="font-semibold text-white">The Retroreflector of the Retina</h3>
-            <p>
-              Have you ever seen a cat&apos;s eyes glow like emerald headlights in the dark? That reflection is caused by the <em>tapetum lucidum</em> (&ldquo;tapestry of light&rdquo;), a layer of tissue situated directly behind the photoreceptor outer segments.
-            </p>
-            <p>
-              In human eyes, unabsorbed photons pass through the retina and are swallowed by the dark pigment epithelium. In cats, deer, and dogs, the tapetum acts as a biological mirror (made of zinc-cysteine or riboflavin crystals), bouncing unabsorbed photons back through the photoreceptors a second time. This effectively doubles quantum efficiency under starlight, at the slight expense of scattered optical blur.
+            <h3 className="font-semibold text-white">Double the Light, Half the Sharpness</h3>
+            <p className="text-xs sm:text-sm">
+              Because light passes through the photoreceptors twice, cats and dogs can see in 1/6th the light a human needs. The trade-off? The bouncing light scatters slightly, making their night vision fuzzier around the edges.
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-surface-300 border border-white/10 space-y-2 text-xs text-slate-300">
-            <h4 className="font-semibold text-cyan-300">The Purkinje Shift:</h4>
+            <h4 className="font-semibold text-cyan-300">Why Night Looks Blue (The Purkinje Shift):</h4>
             <p>
-              As ambient light drops from daylight (photopic) to twilight (mesopic) and night (scotopic), human and animal vision shifts from cone-dominated yellow-green (~555 nm) to rod-dominated cyan-blue (~500 nm). Colors fade into silver, blues appear brighter, and red tones turn dark and indistinguishable.
+              In dim twilight, our daylight color cones shut down and sensitive night rods take over. Because night rods are tuned to blue-green light, reds and oranges turn into pitch dark shadows, while pale blues stand out clearly.
             </p>
           </div>
         </div>
@@ -130,40 +145,42 @@ export default function SpecialVisionPage() {
             </div>
             <div>
               <span className="text-xs uppercase font-mono tracking-widest text-amber-400 font-semibold">
-                Somatosensory Radiation
+                Heat Perception (Non-Visual)
               </span>
-              <h2 className="text-2xl font-bold text-white">Pit Viper Thermal Infrared Organs</h2>
+              <h2 className="text-2xl font-bold text-white">Pit Viper Thermal Heat Sensors</h2>
             </div>
           </div>
           <Link
             href="/simulator?species=pit-viper"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider font-semibold text-black bg-amber-400 hover:bg-amber-300 transition-colors"
           >
-            Inspect Thermal Model
+            Simulate Thermal Vision
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
+        {/* Big Alert: Clarifying the Myth */}
         <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs text-amber-200">
           <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <strong className="text-amber-300">CRITICAL SCIENTIFIC DISTINCTION: This is NOT Retinal Eyesight</strong>
+            <strong className="text-amber-300 text-sm block">Myth Buster: Snakes Do NOT &ldquo;See&rdquo; Heat With Their Eyes</strong>
             <p>
-              Thermal infrared radiation (8,000 - 12,000 nm) has photons far too low in energy to excite retinal rhodopsin pigments. Rattlesnakes do not see heat through their eyes. They possess specialized <strong>facial loreal pit organs</strong> between their eyes and nostrils. Inside is a suspended 15-micrometer membrane packed with TRPA1 ion channels connected to the trigeminal somatosensory nerve. It is heat sensation, processed in the optic tectum to form an internal spatial heatmap.
+              Thermal infrared heat waves are too weak to stimulate regular eye cells. Rattlesnakes actually have two tiny pinholes between their eyes and nostrils called <strong>pit organs</strong>. Inside is a heat-sensitive membrane connected to touch/temperature nerves. The snake&apos;s brain merges this thermal heat-map on top of its normal blurry eyesight, like built-in night vision goggles!
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300 leading-relaxed">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">How The Pit Organ Functions</h3>
-            <p>
-              The pit operates like an optical pinhole camera, casting radiant warmth onto the nerve membrane with an angular resolution of roughly 5°. Sensitivity is astounding: pit vipers can detect temperature changes as small as 0.003 °C, allowing them to locate a warm mouse in pitch darkness.
+            <h3 className="font-semibold text-white">How Sensitive Are They?</h3>
+            <p className="text-xs sm:text-sm">
+              A pit viper can detect temperature differences as tiny as <strong>0.003 °C</strong>! That means even in a pitch-black cave, a motionless warm mouse radiates like a glowing beacon.
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Simulation Limitations</h3>
-            <p>
-              Since smartphone and web cameras do not have thermal microbolometer sensors, our pit viper simulation is marked strictly as <strong>ILLUSTRATIVE</strong>. We project an approximate thermographic ironbow gradient over luminance edges to communicate how bimodal neural convergence works.
+            <h3 className="font-semibold text-white">How We Show It In the Lab</h3>
+            <p className="text-xs sm:text-sm">
+              Because standard computer webcams don&apos;t detect thermal radiation, our pit viper simulation uses an illustrative thermal color map (blues for cooler areas, bright oranges and whites for warm focal points) so you can experience this dual-sense hunting view.
             </p>
           </div>
         </div>
@@ -178,31 +195,43 @@ export default function SpecialVisionPage() {
             </div>
             <div>
               <span className="text-xs uppercase font-mono tracking-widest text-sky-400 font-semibold">
-                Vector Waves
+                Invisible Light Angles
               </span>
-              <h2 className="text-2xl font-bold text-white">Polarized Light & Celestial Compasses</h2>
+              <h2 className="text-2xl font-bold text-white">The Sky Compass (Polarized Light)</h2>
             </div>
           </div>
           <Link
             href="/simulator?species=octopus"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider font-semibold text-black bg-sky-400 hover:bg-sky-300 transition-colors"
           >
-            Simulate Octopus Vision
+            Simulate Octopus
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
+        </div>
+
+        {/* Everyday Analogy Callout */}
+        <div className="p-4 rounded-2xl bg-sky-950/40 border border-sky-500/30 flex items-start gap-3 text-xs text-sky-200">
+          <Lightbulb className="w-5 h-5 text-yellow-300 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-white block text-sm mb-1">Everyday Analogy: Built-In Polarized Sunglasses</strong>
+            <p>
+              Light waves vibrate in all directions. When sunlight hits the atmosphere or reflects off water, it vibrates in straight lines (polarized light). While humans can only see polarization if we put on polarized fishing sunglasses, insects and octopuses have polarized filters built straight into their eyes!
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300 leading-relaxed">
           <div className="space-y-3">
-            <h3 className="font-semibold text-white">Electric Vector (e-vector) Alignment</h3>
-            <p>
-              Sunlight scattering through Earth&apos;s atmosphere becomes linearly polarized, forming concentric rings of electric-field vectors centered on the sun. While humans cannot perceive this pattern, bees, ants, and migratory birds have photoreceptors arranged in perpendicular microvilli grids that act as polarizers. Even under overcast skies, a bee only needs to see a tiny patch of blue sky to determine the exact azimuth of the sun for navigation.
+            <h3 className="font-semibold text-white">Navigating on Overcast Days</h3>
+            <p className="text-xs sm:text-sm">
+              Even behind thick cloud cover, polarization patterns in the sky reveal the exact position of the sun. Desert ants and honeybees use this celestial compass to march miles away for food and find their way straight home without getting lost.
             </p>
           </div>
 
           <div className="space-y-3">
-            <h3 className="font-semibold text-white">Underwater Polarization in Cephalopods</h3>
-            <p>
-              In coastal ocean waters, octopuses and cuttlefish use orthogonal rhabdoms to detect polarization contrast. Many transparent zooplankton, jellyfish, and silvery fish are invisible under normal illumination, but disrupt water polarization, causing them to glow like bright beacons to a hunting octopus.
+            <h3 className="font-semibold text-white">Seeing Through Water Camouflage</h3>
+            <p className="text-xs sm:text-sm">
+              Under the ocean, octopuses and cuttlefish use polarization to spot transparent jellyfish and silvery fish. While these creatures are nearly invisible to humans in underwater haze, to an octopus they shine brightly because they disrupt the water&apos;s natural light polarization.
             </p>
           </div>
         </div>
@@ -216,24 +245,24 @@ export default function SpecialVisionPage() {
           </div>
           <div>
             <span className="text-xs uppercase font-mono tracking-widest text-emerald-400 font-semibold">
-              Distinct Sensory Modalities
+              Distinct Sensory Worlds
             </span>
-            <h2 className="text-2xl font-bold text-white">Echolocation & Electroreception</h2>
+            <h2 className="text-2xl font-bold text-white">Sound Radar & Heartbeat Detectors</h2>
           </div>
         </div>
 
         <p className="text-sm text-slate-300 leading-relaxed">
-          We must not conflate all animal spatial awareness with eyesight. Bats possess functional eyes (contrary to the myth of blindness), but their primary flight targeting is <strong>biosonar echolocation</strong>: emitting high-frequency ultrasonic clicks (20 - 120 kHz) and calculating distance from microsecond acoustic echoes. Similarly, sharks use the Ampullae of Lorenzini to sense bioelectric fields (down to 5 nanovolts) emitted by prey heartbeats.
+          Not all animal navigation relies on eyes! Bats actually have functional eyes (the phrase &ldquo;blind as a bat&rdquo; is a myth), but they navigate pitch-black caves using <strong>echolocation</strong>: shouting ultrasonic clicks and listening for tiny echoes bounce back in microseconds. Sharks have gel-filled pores on their snouts that sense the faint electrical voltage produced by a fish&apos;s beating heart.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-400 pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300 pt-2">
           <div className="p-4 rounded-xl bg-surface-300 border border-white/5 space-y-1">
-            <strong className="text-white block font-mono">Bat Biosonar:</strong>
-            <span>Acoustic delay, Doppler frequency shift, and pinna elevation decoding. Not retinal phototransduction.</span>
+            <strong className="text-emerald-300 block font-bold text-sm">🦇 Bat Echolocation (Biosonar):</strong>
+            <span>High-frequency sound waves (20,000 - 120,000 Hz) that form a 3D acoustic mental map.</span>
           </div>
           <div className="p-4 rounded-xl bg-surface-300 border border-white/5 space-y-1">
-            <strong className="text-white block font-mono">Shark Electroreception:</strong>
-            <span>Gel-filled canal pores detecting microvolt galvanic gradients in conductive seawater.</span>
+            <strong className="text-emerald-300 block font-bold text-sm">🦈 Shark Electroreception:</strong>
+            <span>Electrical pores that detect 5-nanovolt electrical signals from swimming prey hidden under sand.</span>
           </div>
         </div>
       </div>

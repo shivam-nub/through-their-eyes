@@ -12,6 +12,7 @@ import {
   Moon,
   Sun,
   ExternalLink,
+  Lightbulb,
 } from "lucide-react";
 
 export default function ScienceLibraryPage() {
@@ -27,7 +28,7 @@ export default function ScienceLibraryPage() {
           The Science Library
         </h1>
         <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-          The biological principles, mathematical color spaces, spatial frequency equations, and peer-reviewed literature underpinning our simulation engine.
+          How do animal eyes really work? Here are the biological principles and spatial equations that power our simulation engine — with quick plain-English summaries for everyday readers alongside the academic formulas.
         </p>
       </div>
 
@@ -42,6 +43,15 @@ export default function ScienceLibraryPage() {
               Retinal Neurobiology
             </span>
             <h2 className="text-2xl font-bold text-white">Photoreceptors: Rods & Cones</h2>
+          </div>
+        </div>
+
+        {/* 5-second takeaway */}
+        <div className="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-200">
+          <Lightbulb className="w-4 h-4 text-yellow-300 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-white block mb-0.5">The Quick Takeaway:</strong>
+            <span><strong>Cones</strong> are your daylight color cameras (sharp detail & rich hues). <strong>Rods</strong> are your night-vision sensors (extremely sensitive to light and movement, but color-blind).</span>
           </div>
         </div>
 
@@ -72,50 +82,59 @@ export default function ScienceLibraryPage() {
             <span className="text-xs uppercase font-mono text-cyan-400 font-semibold">
               Spatial Frequency Resolution
             </span>
-            <h2 className="text-2xl font-bold text-white">Visual Acuity: Cycles Per Degree</h2>
+            <h2 className="text-2xl font-bold text-white">Visual Acuity: Cycles Per Degree (cpd)</h2>
+          </div>
+        </div>
+
+        {/* 5-second takeaway */}
+        <div className="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-200">
+          <Lightbulb className="w-4 h-4 text-yellow-300 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-white block mb-0.5">The Quick Takeaway:</strong>
+            <span>Think of <strong>Cycles Per Degree (cpd)</strong> like screen pixel density or camera megapixels: an eagle has 140 cpd (ultra-high 4K telephoto), humans have 30-60 cpd, dogs have 12.6 cpd (soft blur), and cats have 6 cpd.</span>
           </div>
         </div>
 
         <div className="space-y-3 text-sm text-slate-300 leading-relaxed">
           <p>
-            In human optometry, sharpness is expressed as <em>20/20</em> Snellen notation. In comparative zoology, scientists measure spatial resolution in <strong>Cycles Per Degree (cpd)</strong>: the maximum number of alternating black and white line pairs an animal can distinguish within one degree of visual angle.
+            In human optometry, sharpness is expressed as <em>20/20</em> Snellen notation. In comparative zoology, scientists measure spatial resolution in <strong>Cycles Per Degree (cpd)</strong>: the maximum number of alternating black and white line pairs an animal can distinguish within one degree of visual angle before blurring into flat gray.
           </p>
 
           <div className="p-4 rounded-xl bg-surface-300 border border-white/10 text-xs text-slate-300 font-mono space-y-2">
             <div className="flex items-center justify-between pb-1 border-b border-white/10 text-slate-400 font-semibold">
               <span>Species</span>
               <span>Cycles Per Degree (cpd)</span>
-              <span>Snellen Equivalent</span>
+              <span>Snellen Rating (Clarity)</span>
             </div>
             <div className="flex items-center justify-between text-cyan-300">
-              <span>Golden Eagle (Aquila chrysaetos)</span>
+              <span>Golden Eagle</span>
               <span className="font-bold">140 cpd</span>
-              <span>20/5 (Telephoto)</span>
+              <span>20/5 (4x sharper than human)</span>
             </div>
             <div className="flex items-center justify-between text-white">
-              <span>Standard Human (Homo sapiens)</span>
+              <span>Standard Human</span>
               <span className="font-bold">60 cpd</span>
-              <span>20/20 (Baseline)</span>
+              <span>20/20 (Optometrist baseline)</span>
             </div>
             <div className="flex items-center justify-between text-slate-300">
-              <span>Domestic Horse (Equus caballus)</span>
+              <span>Domestic Horse</span>
               <span className="font-bold">23 cpd</span>
-              <span>20/30</span>
+              <span>20/30 (Gentle softness)</span>
             </div>
             <div className="flex items-center justify-between text-slate-300">
-              <span>Domestic Dog (Canis lupus familiaris)</span>
+              <span>Domestic Dog</span>
               <span className="font-bold">12.6 cpd</span>
-              <span>20/75</span>
+              <span>20/75 (Needs to be 3x closer)</span>
             </div>
             <div className="flex items-center justify-between text-slate-400">
-              <span>Domestic Cat (Felis catus)</span>
+              <span>Domestic Cat</span>
               <span className="font-bold">6.0 cpd</span>
-              <span>20/150</span>
+              <span>20/150 (Focuses on motion, not detail)</span>
             </div>
             <div className="flex items-center justify-between text-slate-400">
-              <span>Western Honeybee (Apis mellifera)</span>
+              <span>Western Honeybee</span>
               <span className="font-bold">1.5 cpd</span>
-              <span>20/800 (Compound eye)</span>
+              <span>20/800 (Faceted compound pixels)</span>
             </div>
           </div>
         </div>
@@ -131,7 +150,16 @@ export default function ScienceLibraryPage() {
             <span className="text-xs uppercase font-mono text-cyan-400 font-semibold">
               Temporal Processing
             </span>
-            <h2 className="text-2xl font-bold text-white">Critical Flicker Fusion (CFF)</h2>
+            <h2 className="text-2xl font-bold text-white">Critical Flicker Fusion (CFF): Animal Frame Rates</h2>
+          </div>
+        </div>
+
+        {/* 5-second takeaway */}
+        <div className="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-200">
+          <Lightbulb className="w-4 h-4 text-yellow-300 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-white block mb-0.5">The Quick Takeaway:</strong>
+            <span>Ever wonder why a housefly swats away so easily? It sees at <strong>250 frames per second</strong>! To a fly, your fast hand swat looks like slow motion. Small animals process time much faster than humans.</span>
           </div>
         </div>
 

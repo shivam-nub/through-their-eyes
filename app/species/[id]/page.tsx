@@ -7,14 +7,16 @@ import {
   Sparkles,
   ArrowLeft,
   BookOpen,
-  Info,
   ShieldAlert,
   Eye,
   Zap,
   Moon,
   Compass,
-  Layers,
-  ChevronRight,
+  Lightbulb,
+  HeartHandshake,
+  Glasses,
+  Palette,
+  Timer,
 } from "lucide-react";
 
 interface SpeciesDetailPageProps {
@@ -36,20 +38,20 @@ export default async function SpeciesDetailPage({ params }: SpeciesDetailPagePro
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 space-y-8">
       {/* Back button */}
-      <div className="mb-6">
+      <div>
         <Link
           href="/species"
           className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 hover:text-cyan-300 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Species Catalogue
+          Back to Animal Catalogue
         </Link>
       </div>
 
       {/* Hero Dossier Header */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border-white/10 mb-8 relative overflow-hidden">
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border-white/10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
@@ -63,9 +65,11 @@ export default async function SpeciesDetailPage({ params }: SpeciesDetailPagePro
             <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
               {species.commonName}
             </h1>
-            <p className="text-base text-cyan-300/80 italic font-serif">{species.scientificName}</p>
-            <p className="text-xs text-slate-400 max-w-xl pt-1">
-              <span className="font-mono text-slate-300">Ecological Role:</span> {species.ecologicalNiche}
+            <p className="text-lg text-amber-300 font-medium">
+              {species.friendlyTitle || species.scientificName}
+            </p>
+            <p className="text-xs text-slate-400 max-w-xl">
+              <span className="font-mono text-slate-300">Scientific Name:</span> <span className="italic">{species.scientificName}</span> • <span className="font-mono text-slate-300">Niche:</span> {species.ecologicalNiche}
             </p>
           </div>
 
@@ -75,146 +79,198 @@ export default async function SpeciesDetailPage({ params }: SpeciesDetailPagePro
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-mono text-xs uppercase tracking-wider font-semibold text-black bg-cyan-400 hover:bg-cyan-300 shadow-[0_0_20px_rgba(0,245,255,0.3)] transition-all hover:scale-[1.02]"
             >
               <Sparkles className="w-4 h-4" />
-              Launch in Vision Lab
+              Launch Vision Lab
             </Link>
           </div>
         </div>
 
         {/* Featured Quote */}
-        <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/5 text-sm text-cyan-200 italic font-serif">
-          &ldquo;{species.featuredQuote}&rdquo;
+        {species.featuredQuote && (
+          <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/5 text-sm text-cyan-200 italic font-serif">
+            &ldquo;{species.featuredQuote}&rdquo;
+          </div>
+        )}
+      </div>
+
+      {/* Section 1: In Plain English Story & Mind-Blowing Fact */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 glass-panel p-6 rounded-2xl border-cyan-500/30 bg-cyan-950/20 space-y-3">
+          <div className="flex items-center gap-2 text-cyan-300 font-bold text-sm uppercase font-mono tracking-wider">
+            <HeartHandshake className="w-4 h-4 text-cyan-400" />
+            <span>In Plain English: How They See</span>
+          </div>
+          <p className="text-sm text-slate-200 leading-relaxed">
+            {species.inPlainEnglish || species.summary}
+          </p>
+        </div>
+
+        <div className="glass-panel p-6 rounded-2xl border-amber-500/30 bg-amber-950/20 space-y-3">
+          <div className="flex items-center gap-2 text-amber-300 font-bold text-sm uppercase font-mono tracking-wider">
+            <Lightbulb className="w-4 h-4 text-yellow-400" />
+            <span>Mind-Blowing Fact</span>
+          </div>
+          <p className="text-xs text-amber-200/90 leading-relaxed font-sans">
+            {species.funFact || "Every sensory organ in this animal is tailored by millions of years of evolution to match its hunting or foraging environment."}
+          </p>
         </div>
       </div>
 
-      {/* Main Grid: Biological Systems Analysis */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Photoreceptor Spectra */}
-        <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-4">
-          <div className="flex items-center gap-2">
-            <Eye className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white">Photoreceptors & Spectral Tuning</h2>
+      {/* Section 2: Friendly 5-Point Sensory Breakdown */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <Glasses className="w-5 h-5 text-cyan-400" />
+          <span>Everyday Sensory Breakdown</span>
+        </h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Colors */}
+          <div className="glass-panel p-5 rounded-2xl border-white/10 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">
+              <Palette className="w-4 h-4" />
+              <span>Color Vision</span>
+            </div>
+            <p className="text-sm font-semibold text-white">{species.friendlyColorSummary}</p>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Equipped with {species.photoreceptors.count} cone receptor types ({species.photoreceptors.type.toLowerCase()}).
+            </p>
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            {species.photoreceptors.type}. Photoreceptor opsins absorb specific wavelength bands to generate electrical potentials.
-          </p>
 
-          <div className="space-y-2 pt-2">
-            {species.photoreceptors.classes.map((cls, idx) => {
-              // Calculate rough percentage along 300nm-700nm visual spectrum
-              const pct = Math.min(100, Math.max(0, ((cls.peakNm - 300) / 420) * 100));
-              return (
-                <div key={idx} className="p-3 rounded-xl bg-surface-300 border border-white/5 space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-white">{cls.name}</span>
-                    <span className="font-mono text-cyan-300 font-bold">{cls.peakNm} nm</span>
-                  </div>
-                  <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden relative">
-                    <div
-                      className="absolute top-0 bottom-0 w-3 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,245,255,0.8)] -translate-x-1/2"
-                      style={{ left: `${pct}%` }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between text-[10px] text-slate-400">
-                    <span>{cls.colorBand}</span>
-                    <span>{cls.description}</span>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Sharpness */}
+          <div className="glass-panel p-5 rounded-2xl border-white/10 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">
+              <Eye className="w-4 h-4" />
+              <span>Image Sharpness</span>
+            </div>
+            <p className="text-sm font-semibold text-white">{species.friendlySharpness}</p>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Snellen rating: <strong className="text-cyan-300">{species.acuity.snellenEquivalent}</strong> (Human standard is 20/20).
+            </p>
+          </div>
+
+          {/* Night Vision */}
+          <div className="glass-panel p-5 rounded-2xl border-white/10 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">
+              <Moon className="w-4 h-4" />
+              <span>Night Vision</span>
+            </div>
+            <p className="text-sm font-semibold text-white">{species.friendlyNightVision}</p>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              {species.lowLight.sensitivityMultiplier}x human sensitivity • Tapetum mirror: {species.lowLight.tapetumLucidum ? "Yes" : "No"}.
+            </p>
+          </div>
+
+          {/* Motion & Speed */}
+          <div className="glass-panel p-5 rounded-2xl border-white/10 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">
+              <Timer className="w-4 h-4" />
+              <span>Motion & Speed</span>
+            </div>
+            <p className="text-sm font-semibold text-white">{species.friendlyMotion}</p>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Sees up to <strong className="text-cyan-300">{species.temporalResolution.cffHz} frames/sec</strong> before motion blurs together (Humans see ~60 Hz).
+            </p>
+          </div>
+
+          {/* Field of View */}
+          <div className="glass-panel p-5 rounded-2xl border-white/10 space-y-2 sm:col-span-2 lg:col-span-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">
+              <Compass className="w-4 h-4" />
+              <span>Field of View</span>
+            </div>
+            <p className="text-sm font-semibold text-white">{species.friendlyFOV}</p>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Total panoramic coverage: <strong className="text-cyan-300">{species.fieldOfView.totalHorizontalDegrees}°</strong> • 3D depth-perception overlap: <strong className="text-cyan-300">{species.fieldOfView.binocularDegrees}°</strong>.
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* Visual Acuity & Spatial Frequency */}
-        <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-4">
-          <div className="flex items-center gap-2">
+      {/* Section 3: Deep Laboratory Anatomy & Physics */}
+      <div className="space-y-4 pt-4">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <Zap className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white">Visual Acuity & Detail Resolution</h2>
-          </div>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            Spatial resolution is quantified in <strong>Cycles Per Degree (cpd)</strong>: the highest frequency of alternating light and dark bars an animal can resolve within 1° of visual angle.
-          </p>
-
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="p-3 rounded-xl bg-surface-300 border border-white/5">
-              <span className="text-[10px] uppercase font-mono text-slate-400 block">Acuity Threshold</span>
-              <span className="text-2xl font-bold font-mono text-cyan-300">
-                {species.acuity.cyclesPerDegree}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">cycles/degree</span>
-            </div>
-            <div className="p-3 rounded-xl bg-surface-300 border border-white/5">
-              <span className="text-[10px] uppercase font-mono text-slate-400 block">Snellen Equivalent</span>
-              <span className="text-2xl font-bold font-mono text-cyan-300">
-                {species.acuity.snellenEquivalent}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Human standard: 20/20</span>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-surface-300/80 border border-white/5 text-xs text-slate-300 leading-relaxed">
-            {species.acuity.description}
-          </div>
+            <span>Deep Dive: Laboratory Measurements & Anatomy</span>
+          </h2>
+          <span className="text-xs font-mono text-slate-400">Exact Scientific Data</span>
         </div>
 
-        {/* Low-Light & Tapetum Lucidum */}
-        <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-4">
-          <div className="flex items-center gap-2">
-            <Moon className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white">Low-Light Sensitivity (Scotopic)</h2>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-xl bg-surface-300 border border-white/5">
-              <span className="text-[10px] uppercase font-mono text-slate-400 block">Tapetum Lucidum</span>
-              <span className={`text-base font-bold font-mono ${species.lowLight.tapetumLucidum ? "text-emerald-400" : "text-slate-400"}`}>
-                {species.lowLight.tapetumLucidum ? "Present (Reflective)" : "Absent"}
-              </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Photoreceptor Spectra */}
+          <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-4">
+            <div className="flex items-center gap-2">
+              <Eye className="w-4 h-4 text-cyan-400" />
+              <h3 className="text-base font-bold text-white">Photoreceptor Peak Sensitivity (Wavelengths)</h3>
             </div>
-            <div className="p-3 rounded-xl bg-surface-300 border border-white/5 flex-1">
-              <span className="text-[10px] uppercase font-mono text-slate-400 block">Sensitivity Factor</span>
-              <span className="text-base font-bold font-mono text-cyan-300">
-                {species.lowLight.sensitivityMultiplier}x Human
-              </span>
-            </div>
-          </div>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            {species.lowLight.description}
-          </p>
-        </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Each photoreceptor opsin protein absorbs light at specific wavelengths (measured in nanometers, nm). Here is this species&apos; peak absorption spectrum:
+            </p>
 
-        {/* Field of View & Motion */}
-        <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-4">
-          <div className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white">Field of View & Flicker Fusion</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 rounded-xl bg-surface-300 border border-white/5">
-              <span className="text-[10px] uppercase font-mono text-slate-400 block">Panoramic FOV</span>
-              <span className="text-2xl font-bold font-mono text-cyan-300">
-                {species.fieldOfView.totalHorizontalDegrees}°
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Binocular: {species.fieldOfView.binocularDegrees}°</span>
+            <div className="space-y-2 pt-2">
+              {species.photoreceptors.classes.map((cls, idx) => {
+                const pct = Math.min(100, Math.max(0, ((cls.peakNm - 300) / 420) * 100));
+                return (
+                  <div key={idx} className="p-3 rounded-xl bg-surface-300 border border-white/5 space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-semibold text-white">{cls.name}</span>
+                      <span className="font-mono text-cyan-300 font-bold">{cls.peakNm} nm</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden relative">
+                      <div
+                        className="absolute top-0 bottom-0 w-3 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,245,255,0.8)] -translate-x-1/2"
+                        style={{ left: `${pct}%` }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] text-slate-400">
+                      <span>{cls.colorBand}</span>
+                      <span>{cls.description}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <div className="p-3 rounded-xl bg-surface-300 border border-white/5">
-              <span className="text-[10px] uppercase font-mono text-slate-400 block">Critical Flicker (CFF)</span>
-              <span className="text-2xl font-bold font-mono text-cyan-300">
-                {species.temporalResolution.cffHz} Hz
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Human: ~60 Hz</span>
+          </div>
+
+          {/* Visual Acuity & Spatial Frequency */}
+          <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-4">
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-cyan-400" />
+              <h3 className="text-base font-bold text-white">Acuity & Spatial Frequency</h3>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Measured in <strong>Cycles Per Degree (cpd)</strong>: how many pairs of black-and-white lines the eye can resolve in 1 degree of vision before blurring into flat gray.
+            </p>
+
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="p-3 rounded-xl bg-surface-300 border border-white/5">
+                <span className="text-[10px] uppercase font-mono text-slate-400 block">Acuity Cutoff</span>
+                <span className="text-2xl font-bold font-mono text-cyan-300">
+                  {species.acuity.cyclesPerDegree}
+                </span>
+                <span className="text-[10px] text-slate-400 block mt-0.5">cycles/degree (Human: 30)</span>
+              </div>
+              <div className="p-3 rounded-xl bg-surface-300 border border-white/5">
+                <span className="text-[10px] uppercase font-mono text-slate-400 block">Snellen Equivalent</span>
+                <span className="text-2xl font-bold font-mono text-cyan-300">
+                  {species.acuity.snellenEquivalent}
+                </span>
+                <span className="text-[10px] text-slate-400 block mt-0.5">Human baseline: 20/20</span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-surface-300/80 border border-white/5 text-xs text-slate-300 leading-relaxed">
+              {species.acuity.description}
             </div>
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            {species.temporalResolution.relativeSpeedDescription}
-          </p>
         </div>
       </div>
 
-      {/* Assumptions, Limitations, & Sources */}
-      <div className="space-y-6">
+      {/* Section 4: Adaptations, Assumptions & Citations */}
+      <div className="space-y-6 pt-2">
         {/* Evolutionary Adaptations */}
         <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-3">
           <h3 className="text-sm uppercase font-mono tracking-wider font-semibold text-cyan-400">
-            Key Evolutionary Adaptations
+            Key Evolutionary Superpowers
           </h3>
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-slate-200">
             {species.specialAdaptations.map((adapt, idx) => (
@@ -230,11 +286,11 @@ export default async function SpeciesDetailPage({ params }: SpeciesDetailPagePro
         <div className="glass-panel p-6 rounded-2xl border-amber-500/20 bg-amber-500/5 space-y-3">
           <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm">
             <ShieldAlert className="w-4 h-4" />
-            <span>Documented Model Assumptions & Hardware Limitations</span>
+            <span>Honest Scientific Caveats & Simulation Limits</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
             <div>
-              <span className="font-semibold text-slate-200 block mb-1">Mathematical Assumptions:</span>
+              <span className="font-semibold text-slate-200 block mb-1">Scientific Assumptions:</span>
               <ul className="list-disc pl-4 space-y-1 text-slate-400">
                 {species.scientificAssumptions.map((assump, idx) => (
                   <li key={idx}>{assump}</li>
@@ -242,7 +298,7 @@ export default async function SpeciesDetailPage({ params }: SpeciesDetailPagePro
               </ul>
             </div>
             <div>
-              <span className="font-semibold text-slate-200 block mb-1">Screen / Hardware Limitations:</span>
+              <span className="font-semibold text-slate-200 block mb-1">Screen / Monitor Limits:</span>
               <ul className="list-disc pl-4 space-y-1 text-slate-400">
                 {species.scientificLimitations.map((lim, idx) => (
                   <li key={idx}>{lim}</li>
@@ -256,7 +312,7 @@ export default async function SpeciesDetailPage({ params }: SpeciesDetailPagePro
         <div className="glass-panel p-6 rounded-2xl border-white/10 space-y-3">
           <h3 className="text-sm uppercase font-mono tracking-wider font-semibold text-slate-300 flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-cyan-400" />
-            <span>Peer-Reviewed Citations & Literature</span>
+            <span>Peer-Reviewed Academic Sources</span>
           </h3>
           <div className="space-y-2 text-xs">
             {species.sources.map((src, idx) => (

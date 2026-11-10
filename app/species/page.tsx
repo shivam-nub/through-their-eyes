@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { SPECIES_CATALOGUE } from "@/data/species";
 import { EvidenceBadge } from "@/components/shared/EvidenceBadge";
-import { Search, Sparkles, ArrowRight, Filter, Compass } from "lucide-react";
+import { Search, Sparkles, ArrowRight, Eye, Lightbulb, Compass } from "lucide-react";
 
 export default function SpeciesExplorerPage() {
   const [search, setSearch] = useState("");
@@ -16,7 +16,9 @@ export default function SpeciesExplorerPage() {
       sp.commonName.toLowerCase().includes(search.toLowerCase()) ||
       sp.scientificName.toLowerCase().includes(search.toLowerCase()) ||
       sp.taxonomicFamily.toLowerCase().includes(search.toLowerCase()) ||
-      sp.summary.toLowerCase().includes(search.toLowerCase());
+      sp.summary.toLowerCase().includes(search.toLowerCase()) ||
+      (sp.friendlyTitle && sp.friendlyTitle.toLowerCase().includes(search.toLowerCase())) ||
+      (sp.friendlyColorSummary && sp.friendlyColorSummary.toLowerCase().includes(search.toLowerCase()));
 
     const matchesCategory = selectedCategory === "all" || sp.category === selectedCategory;
     const matchesEvidence = selectedEvidence === "all" || sp.evidenceLevel === selectedEvidence;
@@ -30,13 +32,13 @@ export default function SpeciesExplorerPage() {
       <div className="mb-10 text-center max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-xs font-mono text-cyan-300 mb-3">
           <Compass className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Curated Species Explorer</span>
+          <span>Animal Vision Catalogue</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
-          Species Vision Catalogue
+          Explore How Animals See
         </h1>
-        <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-          Explore documented photoreceptor peak sensitivities, visual acuity thresholds, and field of view across vertebrates and invertebrates.
+        <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+          From your dog&apos;s soft blue-and-yellow world to an eagle&apos;s razor-sharp telephoto vision and a bee&apos;s hidden ultraviolet flowers. Real science, translated into simple plain English.
         </p>
       </div>
 
@@ -47,7 +49,7 @@ export default function SpeciesExplorerPage() {
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Search by common name, scientific name, or ecological niche..."
+              placeholder="Search by animal name (e.g. Dog, Cat, Bee, Eagle, Snake)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-surface-300 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
@@ -65,9 +67,9 @@ export default function SpeciesExplorerPage() {
               className="bg-surface-300 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"
             >
               <option value="all">All Evidence Tiers</option>
-              <option value="established">Established</option>
-              <option value="modeled">Modeled</option>
-              <option value="illustrative">Illustrative</option>
+              <option value="established">Verified Science</option>
+              <option value="modeled">Scientific Estimate</option>
+              <option value="illustrative">Visual Concept</option>
             </select>
           </div>
         </div>
@@ -100,66 +102,65 @@ export default function SpeciesExplorerPage() {
           >
             <div>
               {/* Card Header */}
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
                   <span className="text-[11px] uppercase font-mono tracking-wider text-cyan-400 font-semibold block mb-0.5">
-                    {species.category} • {species.taxonomicFamily}
+                    {species.category}
                   </span>
                   <Link
                     href={`/species/${species.id}`}
-                    className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors"
+                    className="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors"
                   >
                     {species.commonName}
                   </Link>
-                  <p className="text-xs text-slate-400 italic font-serif mt-0.5">
-                    {species.scientificName}
+                  <p className="text-xs text-amber-300/90 font-medium mt-0.5">
+                    {species.friendlyTitle || species.scientificName}
                   </p>
                 </div>
                 <EvidenceBadge level={species.evidenceLevel} />
               </div>
 
-              {/* Ecological Niche */}
-              <div className="p-2 rounded bg-surface-300 border border-white/5 text-[11px] text-slate-300 mb-4">
-                <span className="text-slate-400 font-mono">Niche: </span>
-                {species.ecologicalNiche}
+              {/* In Plain English Quick Summary */}
+              <div className="p-3 rounded-xl bg-surface-300 border border-white/5 mb-4 text-xs text-slate-300 leading-relaxed">
+                <p className="line-clamp-3">
+                  {species.inPlainEnglish || species.summary}
+                </p>
               </div>
 
-              {/* Short summary */}
-              <p className="text-xs text-slate-300 leading-relaxed line-clamp-3 mb-5">
-                {species.summary}
-              </p>
-
-              {/* Biological Specs Metric Pills */}
-              <div className="grid grid-cols-3 gap-2 text-xs mb-5">
-                <div className="p-2 rounded bg-surface-300 border border-white/5">
-                  <span className="text-[10px] uppercase font-mono text-slate-400 block">Acuity</span>
-                  <span className="font-semibold text-cyan-300 text-xs">{species.acuity.cyclesPerDegree} cpd</span>
+              {/* Friendly Trait Cards */}
+              <div className="space-y-1.5 mb-4">
+                <div className="p-2 rounded-lg bg-surface-300/80 border border-white/5 flex items-start gap-2 text-xs">
+                  <span className="text-cyan-400 font-bold shrink-0">🎨 Colors:</span>
+                  <span className="text-slate-300 line-clamp-1">{species.friendlyColorSummary}</span>
                 </div>
-                <div className="p-2 rounded bg-surface-300 border border-white/5">
-                  <span className="text-[10px] uppercase font-mono text-slate-400 block">Receptors</span>
-                  <span className="font-semibold text-cyan-300 text-xs">{species.photoreceptors.count}</span>
+                <div className="p-2 rounded-lg bg-surface-300/80 border border-white/5 flex items-start gap-2 text-xs">
+                  <span className="text-cyan-400 font-bold shrink-0">👁️ Clarity:</span>
+                  <span className="text-slate-300 line-clamp-1">{species.friendlySharpness}</span>
                 </div>
-                <div className="p-2 rounded bg-surface-300 border border-white/5">
-                  <span className="text-[10px] uppercase font-mono text-slate-400 block">FOV</span>
-                  <span className="font-semibold text-cyan-300 text-xs">{species.fieldOfView.totalHorizontalDegrees}°</span>
+                <div className="p-2 rounded-lg bg-surface-300/80 border border-white/5 flex items-start gap-2 text-xs">
+                  <span className="text-cyan-400 font-bold shrink-0">🌙 Night:</span>
+                  <span className="text-slate-300 line-clamp-1">{species.friendlyNightVision}</span>
                 </div>
               </div>
 
-              {/* Opsins list */}
-              <div className="text-[11px] space-y-1 mb-5">
-                <span className="text-slate-400 font-mono text-[10px] uppercase block">
-                  Receptor Peaks (λ max):
+              {/* Fun Fact Callout */}
+              {species.funFact && (
+                <div className="p-2.5 rounded-lg bg-cyan-950/40 border border-cyan-500/20 text-[11px] text-cyan-200 flex items-start gap-2 mb-4">
+                  <Lightbulb className="w-3.5 h-3.5 text-yellow-400 shrink-0 mt-0.5" />
+                  <span className="line-clamp-2">
+                    <strong>Did you know?</strong> {species.funFact}
+                  </span>
+                </div>
+              )}
+
+              {/* Technical quick badges for science nerds */}
+              <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 mb-2">
+                <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/5">
+                  Acuity: {species.acuity.cyclesPerDegree} cpd ({species.acuity.snellenEquivalent})
                 </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {species.photoreceptors.classes.map((cls, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-cyan-300"
-                    >
-                      {cls.name} ({cls.peakNm}nm)
-                    </span>
-                  ))}
-                </div>
+                <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/5">
+                  FOV: {species.fieldOfView.totalHorizontalDegrees}°
+                </span>
               </div>
             </div>
 
@@ -169,7 +170,7 @@ export default function SpeciesExplorerPage() {
                 href={`/species/${species.id}`}
                 className="text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white flex items-center gap-1"
               >
-                <span>Full Dossier</span>
+                <span>Read Story</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link
@@ -186,7 +187,7 @@ export default function SpeciesExplorerPage() {
 
       {filteredSpecies.length === 0 && (
         <div className="text-center py-16 text-slate-400">
-          <p className="text-base">No species found matching your filters.</p>
+          <p className="text-base">No animals found matching your search.</p>
           <button
             type="button"
             onClick={() => {

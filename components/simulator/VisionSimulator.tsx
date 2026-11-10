@@ -21,6 +21,7 @@ import {
   RefreshCw,
   ExternalLink,
   BookOpen,
+  Sparkles,
 } from "lucide-react";
 import { SpeciesProfile } from "@/types/species";
 import { SPECIES_CATALOGUE } from "@/data/species";
@@ -46,6 +47,7 @@ export function VisionSimulator({
   const [selectedSpeciesId, setSelectedSpeciesId] = useState<string>(initialSpeciesId);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [infoViewMode, setInfoViewMode] = useState<"everyday" | "science">("everyday");
   const [inputType, setInputType] = useState<InputType>("sample");
   const [selectedSceneId, setSelectedSceneId] = useState<string>(initialSceneId);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
@@ -881,120 +883,205 @@ export function VisionSimulator({
             </div>
           </div>
 
-          {/* Scientific Traits & Evidence Dossier */}
-          <div className="glass-panel p-4 rounded-xl border-white/10 space-y-4">
-            <div className="flex items-start justify-between">
+          {/* Species Dossier Panel: Everyday vs Deep Science */}
+          <div className="glass-panel p-5 rounded-2xl border-white/10 space-y-4">
+            {/* Header & Mode Switcher */}
+            <div className="flex items-start justify-between gap-2 pb-3 border-b border-white/10">
               <div>
-                <span className="text-[10px] uppercase font-mono tracking-wider text-cyan-400 font-semibold">
-                  Visual System Profile
+                <span className="text-[10px] uppercase font-mono tracking-wider text-cyan-400 font-semibold block">
+                  Perception Profile
                 </span>
-                <h4 className="text-base font-bold text-white">{currentSpecies.commonName}</h4>
-                <p className="text-xs text-slate-400 italic">{currentSpecies.scientificName}</p>
+                <h4 className="text-lg font-bold text-white">{currentSpecies.commonName}</h4>
+                <p className="text-xs text-cyan-300/80 font-medium">{currentSpecies.friendlyTitle}</p>
               </div>
               <EvidenceBadge level={currentSpecies.evidenceLevel} />
             </div>
 
-            {/* Quick Metrics Grid */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
-                <span className="text-[10px] uppercase font-mono text-slate-400 block">
-                  Acuity (Cycles/Deg)
-                </span>
-                <span className="text-sm font-bold font-mono text-cyan-300">
-                  {currentSpecies.acuity.cyclesPerDegree} cpd
-                </span>
-                <span className="text-[10px] text-slate-400 block mt-0.5">
-                  Snellen: {currentSpecies.acuity.snellenEquivalent}
-                </span>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
-                <span className="text-[10px] uppercase font-mono text-slate-400 block">
-                  Photoreceptor Classes
-                </span>
-                <span className="text-sm font-bold font-mono text-cyan-300">
-                  {currentSpecies.photoreceptors.count} Classes
-                </span>
-                <span className="text-[10px] text-slate-400 block mt-0.5 truncate">
-                  {currentSpecies.photoreceptors.type.split(" ")[0]}
-                </span>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
-                <span className="text-[10px] uppercase font-mono text-slate-400 block">
-                  Temporal (CFF)
-                </span>
-                <span className="text-sm font-bold font-mono text-cyan-300">
-                  {currentSpecies.temporalResolution.cffHz} Hz
-                </span>
-                <span className="text-[10px] text-slate-400 block mt-0.5">
-                  Human: ~60 Hz
-                </span>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
-                <span className="text-[10px] uppercase font-mono text-slate-400 block">
-                  Field of View
-                </span>
-                <span className="text-sm font-bold font-mono text-cyan-300">
-                  {currentSpecies.fieldOfView.totalHorizontalDegrees}°
-                </span>
-                <span className="text-[10px] text-slate-400 block mt-0.5">
-                  Stereo: {currentSpecies.fieldOfView.binocularDegrees}°
-                </span>
-              </div>
+            {/* Toggle: Everyday View vs Deep Science */}
+            <div className="flex rounded-lg bg-surface-300 p-1 border border-white/10 text-xs">
+              <button
+                type="button"
+                onClick={() => setInfoViewMode("everyday")}
+                className={`flex-1 py-1.5 rounded-md font-medium text-center transition-all ${
+                  infoViewMode === "everyday"
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                💡 Everyday View
+              </button>
+              <button
+                type="button"
+                onClick={() => setInfoViewMode("science")}
+                className={`flex-1 py-1.5 rounded-md font-medium text-center transition-all ${
+                  infoViewMode === "science"
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                🔬 Deep Science
+              </button>
             </div>
 
-            {/* Opsin Spectral Sensitivities */}
-            <div>
-              <span className="text-[11px] font-semibold text-slate-300 block mb-1.5">
-                Photoreceptor Spectral Sensitivity (λ max):
-              </span>
-              <div className="space-y-1.5">
-                {currentSpecies.photoreceptors.classes.map((cls, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between text-[11px] p-1.5 rounded bg-white/5 border border-white/5"
-                  >
-                    <span className="text-slate-300">{cls.name}</span>
-                    <span className="font-mono text-cyan-400 font-semibold">{cls.peakNm} nm</span>
+            {/* MODE 1: Everyday Learnable View (Clean, clear, zero jargon) */}
+            {infoViewMode === "everyday" && (
+              <div className="space-y-4">
+                {/* In Plain English story card */}
+                <div className="p-3.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-100 space-y-1.5 leading-relaxed">
+                  <div className="flex items-center gap-1.5 font-bold text-cyan-300 uppercase tracking-wider text-[10px] font-mono">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>In Plain English:</span>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Evidence Rationale & Non-negotiable caveat */}
-            <div className="p-3 rounded-lg bg-surface-300/80 border border-white/10 text-xs text-slate-300 space-y-1.5">
-              <div className="flex items-center gap-1.5 font-semibold text-cyan-300">
-                <Info className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Scientific Methodology</span>
-              </div>
-              <p className="text-[11px] leading-relaxed text-slate-400">
-                {currentSpecies.evidenceRationale}
-              </p>
-              <div className="pt-2 border-t border-white/10 text-[10px] text-slate-400 space-y-1">
-                <span className="font-semibold text-amber-400 block">Model Limitations:</span>
-                <ul className="list-disc pl-3 space-y-0.5">
-                  {currentSpecies.scientificLimitations.map((lim, i) => (
-                    <li key={i}>{lim}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Academic Citations */}
-            <div className="text-[11px] space-y-1.5">
-              <span className="font-semibold text-slate-300 flex items-center gap-1">
-                <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
-                Primary Sources:
-              </span>
-              {currentSpecies.sources.map((src, i) => (
-                <div key={i} className="text-slate-400 leading-snug">
-                  <span className="text-slate-200">{src.authors} ({src.year}).</span> &ldquo;{src.title}&rdquo;{" "}
-                  {src.journal && <span className="italic">{src.journal}</span>}
+                  <p className="text-slate-200">{currentSpecies.inPlainEnglish}</p>
                 </div>
-              ))}
-            </div>
+
+                {/* 4 Easy Vision Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div className="p-2.5 rounded-xl bg-surface-300 border border-white/5 space-y-0.5">
+                    <span className="text-[10px] font-mono text-slate-400 block">🎨 Colors They See</span>
+                    <p className="font-semibold text-slate-200 text-[11px] leading-snug">
+                      {currentSpecies.friendlyColorSummary}
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-surface-300 border border-white/5 space-y-0.5">
+                    <span className="text-[10px] font-mono text-slate-400 block">🔍 Sharpness & Detail</span>
+                    <p className="font-semibold text-slate-200 text-[11px] leading-snug">
+                      {currentSpecies.friendlySharpness}
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-surface-300 border border-white/5 space-y-0.5">
+                    <span className="text-[10px] font-mono text-slate-400 block">🌙 Night Vision</span>
+                    <p className="font-semibold text-slate-200 text-[11px] leading-snug">
+                      {currentSpecies.friendlyNightVision}
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-surface-300 border border-white/5 space-y-0.5">
+                    <span className="text-[10px] font-mono text-slate-400 block">⚡ Reaction & Motion</span>
+                    <p className="font-semibold text-slate-200 text-[11px] leading-snug">
+                      {currentSpecies.friendlyMotion}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Fun Fact Callout */}
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 leading-relaxed">
+                  <span className="font-bold text-amber-300 block mb-0.5 text-[10px] font-mono uppercase">
+                    ⭐ Mind-Blowing Fact:
+                  </span>
+                  <p className="text-amber-100/90">{currentSpecies.funFact}</p>
+                </div>
+              </div>
+            )}
+
+            {/* MODE 2: Deep Science View (For students, researchers, optics buffs) */}
+            {infoViewMode === "science" && (
+              <div className="space-y-4">
+                {/* Quick Metrics Grid */}
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
+                    <span className="text-[10px] uppercase font-mono text-slate-400 block">
+                      Acuity (Cycles/Deg)
+                    </span>
+                    <span className="text-sm font-bold font-mono text-cyan-300">
+                      {currentSpecies.acuity.cyclesPerDegree} cpd
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                      Snellen: {currentSpecies.acuity.snellenEquivalent}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
+                    <span className="text-[10px] uppercase font-mono text-slate-400 block">
+                      Photoreceptor Classes
+                    </span>
+                    <span className="text-sm font-bold font-mono text-cyan-300">
+                      {currentSpecies.photoreceptors.count} Classes
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5 truncate">
+                      {currentSpecies.photoreceptors.type.split(" ")[0]}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
+                    <span className="text-[10px] uppercase font-mono text-slate-400 block">
+                      Temporal (CFF)
+                    </span>
+                    <span className="text-sm font-bold font-mono text-cyan-300">
+                      {currentSpecies.temporalResolution.cffHz} Hz
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                      Human: ~60 Hz
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-surface-300 border border-white/10">
+                    <span className="text-[10px] uppercase font-mono text-slate-400 block">
+                      Field of View
+                    </span>
+                    <span className="text-sm font-bold font-mono text-cyan-300">
+                      {currentSpecies.fieldOfView.totalHorizontalDegrees}°
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                      Stereo: {currentSpecies.fieldOfView.binocularDegrees}°
+                    </span>
+                  </div>
+                </div>
+
+                {/* Opsin Spectral Sensitivities */}
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-300 block mb-1.5">
+                    Photoreceptor Spectral Sensitivity (λ max):
+                  </span>
+                  <div className="space-y-1.5">
+                    {currentSpecies.photoreceptors.classes.map((cls, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between text-[11px] p-1.5 rounded bg-white/5 border border-white/5"
+                      >
+                        <span className="text-slate-300">{cls.name}</span>
+                        <span className="font-mono text-cyan-400 font-semibold">{cls.peakNm} nm</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Evidence Rationale & Non-negotiable caveat */}
+                <div className="p-3 rounded-lg bg-surface-300/80 border border-white/10 text-xs text-slate-300 space-y-1.5">
+                  <div className="flex items-center gap-1.5 font-semibold text-cyan-300">
+                    <Info className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Scientific Methodology</span>
+                  </div>
+                  <p className="text-[11px] leading-relaxed text-slate-400">
+                    {currentSpecies.evidenceRationale}
+                  </p>
+                  <div className="pt-2 border-t border-white/10 text-[10px] text-slate-400 space-y-1">
+                    <span className="font-semibold text-amber-400 block">Model Limitations:</span>
+                    <ul className="list-disc pl-3 space-y-0.5">
+                      {currentSpecies.scientificLimitations.map((lim, i) => (
+                        <li key={i}>{lim}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Academic Citations */}
+                <div className="text-[11px] space-y-1.5">
+                  <span className="font-semibold text-slate-300 flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
+                    Primary Sources:
+                  </span>
+                  {currentSpecies.sources.map((src, i) => (
+                    <div key={i} className="text-slate-400 leading-snug">
+                      <span className="text-slate-200">{src.authors} ({src.year}).</span> &ldquo;{src.title}&rdquo;{" "}
+                      {src.journal && <span className="italic">{src.journal}</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -106,4 +106,14 @@ export interface SpeciesProfile {
   shaderParams: ShaderParameters;
   iconName: string;
   featuredQuote: string;
+
+  // Beginner-friendly learnable layer
+  friendlyTitle: string;
+  friendlyColorSummary: string;
+  friendlySharpness: string;
+  friendlyNightVision: string;
+  friendlyMotion: string;
+  friendlyFOV: string;
+  inPlainEnglish: string;
+  funFact: string;
 }
